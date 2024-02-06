@@ -7,342 +7,484 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #343541;
-            color: white;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        .icon {
-            width: 76px;
-            height: 76px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        .center {
-            width: 76px;
-            height: 76px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            padding-top: 15px;
-            padding-left: 15px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 17px;
-        }
-
-        .foot {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            display: flex;
-            justify-content: center;
-            background-color: #343541;
-        }
-
-        .input {
-            border: 1px solid #555561;
-            border-radius: 15px;
-            background-color: #343541;
-            padding: 10px 15px;
-            height: 30px;
-            width: 760px;
-        }
-
-        .input-box {
-            border: none;
-            background-color: #343541;
-            color: #fff;
-            height: 30px;
-            font-family: Arial, sans-serif;
-            font-weight: inherit;
-            outline: none;
-            width: 95%;
-            max-width: 630px;
-            font-size: 17px;
-            float: left;
-        }
-
-            .input-box:focus {
-                outline: none;
-            }
-
-            .input-box::placeholder {
-                font-family: Arial, Helvetica, sans-serif;
-                color: #888;
-                font-size: 16px;
-            }
-
-        h1 {
-            font-size: 1.5rem;
-        }
-
-        .txt-submit {
-            height: 30px;
-            width: 30px;
-            background-color: #fff;
-            border: 1px solid #555561;
-            border-radius: 8px;
-            float: right;
-            cursor: pointer;
-        }
-
-        .warning {
-            position: fixed;
-            bottom: 5px;
-            text-align: center;
-            width: 100%;
-            font-size: 12px;
-            color: #ccc
-        }
-
-        .chatcontent {
-            position: fixed;
-            overflow-y: auto;
-            scrollbar-color: #888 #343541;
-            scrollbar-width: thin;
-            top: 80px;
-            left: 0;
-            right: 0;
-            bottom: 80px;
-            display: none;
-            width: 100%;
-            align-items: center;
-            flex-direction: column;
-        }
-            .chatcontent .userchat {
-                min-width: 600px;
-            }
-            .chatcontent::-webkit-scrollbar {
-                width: 6px;
-            }
-
-            .chatcontent::-webkit-scrollbar-track {
-                background: #343541;
-            }
-
-            .chatcontent::-webkit-scrollbar-thumb {
-                background: #555;
-                border-radius: 6px;
-            }
-
-                .chatcontent::-webkit-scrollbar-thumb:hover {
-                    background: #888;
-                }
-
-            .chatcontent div {
-                margin: 10px;
-                width: 40%;
-            }
-
-            .chatcontent .avatar {
-                float: left;
-                width: 26px;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-
-            .chatcontent .name {
-                float: left;
-                width: 89%;
-                height: 26px;
-                margin: 0;
-                padding: 0;
-                font-weight: bold;
-            }
-
-            .chatcontent .message {
-                float: left;
-                width: 89%;
-                height: 90%;
-                margin: 0;
-                padding: 0;
-                color: #d1d5db
-            }
-
-            .chatcontent .circlechat {
-                width: 22px;
-                height: 22px;
-                border-radius: 50%;
-                background-color: rgb(171, 104, 255);
-                border: solid 1px #aaa;
-                transform: translateX(-50%);
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .chatcontent .circleuser {
-                width: 22px;
-                height: 22px;
-                border-radius: 50%;
-                background-color: goldenrod;
-                border: solid 1px #aaa;
-                transform: translateX(-50%);
-                margin: 0;
-                padding: 0;
-            }
-
-            .chatcontent .userchat {
-                margin-bottom: 30px;
-                min-width: 600px;
-            }
-
-            .chatcontent .chatgpt {
-                margin-bottom: 30px;
-                min-width: 600px;
-            }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="~/css/chatgpt.css" />
 </head>
-<body>
-    <div class="header">
-        <span>ChatGPT 4</span>
-    </div>
-    <div class="container">
-        <div class="icon">
-            <div class="center">
-                <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-2/3 w-2/3" role="img"><path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="#000000"></path></svg>
+<body class="show-menu">
+    <div id="tip" class="tip"></div>
+    <div id="menu-bar">
+        <div class="menu-head" onclick="location.href='/'">
+            <div class="menu-head-title">
+                <div>
+                    <div class="menu-head-title-div1">
+                        <svg width="18" height="18" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-2/3 w-2/3" role="img">
+                            <path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="menu-head-title-div2 ">ChatGPT</div>
+                <div class="menu-head-title-div3">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-md">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.7929 2.79289C18.0118 1.57394 19.9882 1.57394 21.2071 2.79289C22.4261 4.01184 22.4261 5.98815 21.2071 7.20711L12.7071 15.7071C12.5196 15.8946 12.2652 16 12 16H9C8.44772 16 8 15.5523 8 15V12C8 11.7348 8.10536 11.4804 8.29289 11.2929L16.7929 2.79289ZM19.7929 4.20711C19.355 3.7692 18.645 3.7692 18.2071 4.2071L10 12.4142V14H11.5858L19.7929 5.79289C20.2308 5.35499 20.2308 4.64501 19.7929 4.20711ZM6 5C5.44772 5 5 5.44771 5 6V18C5 18.5523 5.44772 19 6 19H18C18.5523 19 19 18.5523 19 18V14C19 13.4477 19.4477 13 20 13C20.5523 13 21 13.4477 21 14V18C21 19.6569 19.6569 21 18 21H6C4.34315 21 3 19.6569 3 18V6C3 4.34314 4.34315 3 6 3H10C10.5523 3 11 3.44771 11 4C11 4.55228 10.5523 5 10 5H6Z" fill="currentColor"></path>
+                    </svg>
+                </div>
             </div>
         </div>
-        <h1>How can I help you today?</h1>
-    </div>
-    <div class="chatcontent">
-    </div>
-    <div class="foot">
-        <div class="input">
-            <input type="text" class="input-box" placeholder="Message ChatGPT...">
-            <button class="txt-submit" />
-            <span>
-                <svg width="30" height="30" fill="none" style="margin-left:-4px;"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-            </span>
+        <div class="menu-body">
+
         </div>
-        <span class="warning">ChatGPT can make mistakes. Consider checking important information.</span>
+        <div class="menu-foot">
+            <div class="menu-foot-menu menu-foot-menu-hide">
+                <div onclick="setsysprompt()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-md"><path d="M10.663 6.3872C10.8152 6.29068 11 6.40984 11 6.59007V8C11 8.55229 11.4477 9 12 9C12.5523 9 13 8.55229 13 8V6.59007C13 6.40984 13.1848 6.29068 13.337 6.3872C14.036 6.83047 14.5 7.61105 14.5 8.5C14.5 9.53284 13.8737 10.4194 12.9801 10.8006C12.9932 10.865 13 10.9317 13 11V13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13V11C11 10.9317 11.0068 10.865 11.0199 10.8006C10.1263 10.4194 9.5 9.53284 9.5 8.5C9.5 7.61105 9.96397 6.83047 10.663 6.3872Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4 5V19C4 20.6569 5.34315 22 7 22H19C19.3346 22 19.6471 21.8326 19.8325 21.5541C20.0179 21.2755 20.0517 20.9227 19.9225 20.614C19.4458 19.4747 19.4458 18.5253 19.9225 17.386C19.9737 17.2637 20 17.1325 20 17V3C20 2.44772 19.5523 2 19 2H7C5.34315 2 4 3.34315 4 5ZM6 5C6 4.44772 6.44772 4 7 4H18V16H7C6.64936 16 6.31278 16.0602 6 16.1707V5ZM7 18H17.657C17.5343 18.6699 17.5343 19.3301 17.657 20H7C6.44772 20 6 19.5523 6 19C6 18.4477 6.44772 18 7 18Z" fill="currentColor"></path></svg>
+                    <span>自定义指令</span>
+                </div>
+            </div>
+            <div class="foot-content">
+                <div class="user-avatar">
+                    <div class="circleuser"></div>
+                </div>
+                <div class="user-name"></div>
+            </div>
+        </div>
     </div>
-    <div style="clear:both"></div>
+    <div id="content-area">
+        <div class="header">
+            <div class="toggle-btn toggle-btn-show">
+                <div class="toggle-btn-scoll"></div>
+            </div>
+            <div class="reset-btn">
+                <span>
+                    ChatGPT
+                </span>
+                <span class="colorddd">4</span>
+                <svg width="20" height="20" viewBox="0 0 16 17" fill="none" class="text-token-text-tertiary"><path d="M11.3346 7.83203L8.00131 11.1654L4.66797 7.83203" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+        </div>
+        <div class="container">
+            <div class="icon">
+                <div class="center">
+                    <svg width="32" height="32" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-2/3 w-2/3" role="img"><path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="#000000"></path></svg>
+                </div>
+            </div>
+            <h1>我今天能帮你做什么？</h1>
+        </div>
+        <div class="chatcontent">
+        </div>
+        <div class="foot">
+            <div class="pre-prompt">
+                <div class="box" onclick="SendMessage('我希望从北京出发，简短的规划一份三天的旅行计划')">
+                    <p>规划一次旅行</p>
+                    <p style="color:#888">我希望从北京出发，规划一份三天的旅行计划</p>
+                </div>
+                <div class="box" onclick="SendMessage('我是一名设计师，我希望你帮我生成一句话项目进度日报大纲')">
+                    <p>编写一份简单的日报</p>
+                    <p style="color:#888">我希望你帮我生成一句话的设计师项目进度日报大纲</p>
+                </div>
+                <div class="box" onclick="SendMessage('请用一句话讲一个历史上有趣的典故')">
+                    <p>讲一个有趣的事实</p>
+                    <p style="color:#888">请用一句话讲一个历史上有趣的典故</p>
+                </div>
+                <div class="box" onclick="SendMessage('我需要你帮我计算12+24等于多少,给出解题步骤')">
+                    <p>计算数学题</p>
+                    <p style="color:#888">我需要你帮我计算12+24等于多少</p>
+                </div>
+            </div>
+            <div class="input">
+                <input type="text" class="input-box" placeholder="发送消息给 ChatGPT...">
+                <button class="txt-submit" onclick="SendMessage()" />
+                <span>
+                    <svg width="30" height="30" fill="none" style="margin-left:-4px;"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </span>
+            </div>
+            <span class="warning">ChatGPT可能会犯错误。请考虑核实重要信息。</span>
+        </div>
+        <div style="clear:both"></div>
+        <div id="myDialog" class="dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <p id="dialogTitle" style="font-size:20px;"></p>
+                </div>
+                <hr style="border-color:#000;width:100%" />
+                <div class="dialog-body">
+                    <p id="dialogContent"></p>
+                </div>
+                <div class="dialog-footer">
+                    <button id="confirmButton" class="confirm">确定</button>
+                    <button onclick="hideDialog()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/highlight.min.js"></script>
+    <script type="text/javascript" src="js/marked.min.js"></script>
     <script type="text/javascript">
-        function findLongestCommonSubstringAndCheckEnd(A, B) {
-            let dp = Array.from({ length: A.length + 1 }, () => Array(B.length + 1).fill(0));
-            let maxLength = 0;
-            let maxEnd = 0;
-
-            for (let i = 1; i <= A.length; i++) {
-                for (let j = 1; j <= B.length; j++) {
-                    if (A[i - 1] === B[j - 1]) {
-                        dp[i][j] = dp[i - 1][j - 1] + 1;
-                        if (dp[i][j] > maxLength) {
-                            maxLength = dp[i][j];
-                            maxEnd = i;
-                        }
-                    }
-                }
-            }
-
-            // 检查最长子串是否是A的唯一结尾
-            return maxLength > 0 && maxEnd === A.length;
+        document.getElementsByClassName("foot-content")[0].addEventListener('click', function () {
+            togglefootmenu();
+        });
+        function togglefootmenu() {
+            document.getElementsByClassName('menu-foot-menu')[0].classList.toggle('menu-foot-menu-hide');
+            document.getElementsByClassName('foot-content')[0].classList.toggle('foot-content-active');
         }
-        var ws = new WebSocket('ws://localhost:80/');
-        ws.onopen = function () {
-            console.log('Connected');
-        };
-        var firstcheck = 0;
-        let buffer = '';
-        const chatStart = "ChineseBot:";
-        const chatEnd = "User:";
-        ws.onmessage = function (event) {
-            buffer += event.data;
-            console.log(buffer);
-            if (firstcheck == 1) {
-                if (findLongestCommonSubstringAndCheckEnd(buffer, chatStart) == false) {
-                    if (buffer.includes(chatStart)) {
-                        buffer = buffer.replace(chatStart, '');
-                        addchat(buffer);
-                        firstcheck = 2;
+        function setsysprompt() {
+            togglefootmenu();
+            var content = sessionStorage.getItem("systemprompt");
+            if (content == null) {
+                content = '';
+            }
+            showDialog("自定义指令", "<p>通过设置自定义指令，ChatGPT将能够更好的完成你的任务</p><textarea class=\"systemprompt dialog-textarea\">" + content + "</textarea>",
+                function () {
+                    var content = document.getElementsByClassName("systemprompt")[0].value;
+                    sessionStorage.setItem("systemprompt", content);
+                    return true;
+                });
+        }
+        document.getElementsByClassName('toggle-btn')[0].addEventListener('click', function () {
+            document.body.classList.toggle('show-menu');
+            document.getElementsByClassName('toggle-btn')[0].classList.toggle('toggle-btn-show');
+        });
+        function showDialog(title, content, onConfirm) {
+            document.getElementById("dialogTitle").textContent = title;
+            document.getElementById("dialogContent").innerHTML = content;
+            var confirmButton = document.getElementById("confirmButton");
+            confirmButton.onclick = function () {
+                const result = onConfirm();
+                if (result instanceof Promise) {
+                    result.then(isConfirmed => {
+                        if (isConfirmed) {
+                            hideDialog(); // 关闭对话框
+                        }
+                    });
+                } else {
+                    if (result) {
+                        hideDialog(); // 关闭对话框
                     }
                 }
-                else if (buffer.includes(chatStart)) {
-                    buffer = buffer.replace(chatStart, '');
-                    addchat(buffer);
+            };
+            document.getElementById("myDialog").style.display = "block";
+        }
+
+        function hideDialog() {
+            document.getElementById("myDialog").style.display = "none";
+        }
+
+        function confirmnewchat() {
+            newchat();
+            document.getElementsByClassName("chatcontent")[0].innerHTML = "";
+            document.getElementsByClassName("container")[0].style.display = 'flex';
+            document.getElementsByClassName("pre-prompt")[0].style.display = 'flex';
+            document.getElementsByClassName("chatcontent")[0].style.display = 'none';
+            hideDialog();
+            return true;
+        }
+
+        // Optional: Close the dialog if the user clicks anywhere outside of it
+        window.onclick = function (event) {
+            var dialog = document.getElementById("myDialog");
+            if (event.target == dialog) {
+                hideDialog();
+            }
+        }
+        var nickName = '新用户';
+        var wsurl = 'ws://127.0.0.1:80';
+        function getuser() {
+            document.getElementsByClassName("user-name")[0].innerText = nickName;
+            var elements = document.getElementsByClassName("circleuser")
+            Array.prototype.forEach.call(elements, function (element) {
+                element.innerText = nickName.charAt(0).toUpperCase();
+            });
+            ws = new WebSocket(wsurl);
+            ws.onmessage = wscallback;
+        }
+        getuser();
+        const renderer = new marked.Renderer();
+        renderer.code = function (code, language) {
+            const highlighted = hljs.highlightAuto(code).value;
+            return `<pre class="hljs ${language}"><code>${highlighted}</code></pre>`;
+        };
+        marked.setOptions({
+            highlight: function (code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    return hljs.highlight(lang, code).value;
+                }
+                return hljs.highlightAuto(code).value;
+            },
+            renderer: renderer
+        });
+        InitHistory();
+        var firstcheck = 0;
+        var relpy = '';
+        function wscallback (event) {
+            relpy += event.data;
+            console.log(relpy);
+            if (firstcheck == 1) {
+                if (event.data == "wsend") {
+                    appendchat("抱歉,AI没有产生有效的响应，请重试");
+                    firstcheck = 0;
+                    var curr = document.getElementsByClassName("chatcurrent")[0];
+                    curr.setAttribute("class", "message");
+                    var old = localStorage.getItem("chathistory");
+                    if (old != null) {
+                        old = JSON.parse(old);
+                    }
+                    old.pop();
+                    localStorage.setItem("chathistory", JSON.stringify(old));
+                }
+                else {
+                    appendchat(relpy);
                     firstcheck = 2;
                 }
             }
             else if (firstcheck == 2) {
-                if (findLongestCommonSubstringAndCheckEnd(buffer, chatEnd)) {
-                    if (buffer.includes(chatEnd)) {
-                        firstcheck = 0;
-                        var curr = document.getElementsByClassName("chatcurrent")[0];
+                if (event.data == "wsend") {
+                    var old = localStorage.getItem("chathistory");
+                    if (old != null) {
+                        old = JSON.parse(old);
+                    }
+                    var filteredObjects = old.filter(obj => obj.id === trygetsession())[0];
+                    filteredObjects.record.push({ Type: 1, Comment: relpy.replace("wsend", "") });
+                    firstcheck = 0;
+                    var currs = document.getElementsByClassName("chatcurrent");
+                    Array.prototype.forEach.call(currs, function (curr) {
                         curr.setAttribute("class", "message");
-                        buffer = '';
+                    });
+                    window.history.replaceState({}, '', '/?session=' + trygetsession());
+                    localStorage.setItem("chathistory", JSON.stringify(old));
+                    if (filteredObjects.record.length == 2) {
+                        InitHistory();
                     }
                 }
                 else {
-                    appendchat(event.data);
+                    appendchat(relpy);
                 }
             }
         };
+        var session = trygetsession();
         document.getElementsByClassName("input-box")[0].addEventListener('keypress', function (event) {
             if (event.key === 'Enter' && firstcheck == 0) {
-                event.preventDefault(); // 阻止回车默认的换行行为
-                // 获取输入框的消息内容
-                var message = this.value;
-                // 确保消息不为空和 WebSocket 连接是开启的
-                if (message && ws && ws.readyState === WebSocket.OPEN) {
-                    ws.send(message); // 使用 WebSocket 发送消息
-                    this.value = ''; // 清空输入框
-                    document.getElementsByClassName("container")[0].style.display = 'none';
-                    document.getElementsByClassName("chatcontent")[0].style.display = 'flex';
-                    adduser(message);
-                    firstcheck = 1;
-                }
+                event.preventDefault();
+                SendMessage();
             }
         });
+        function SendMessage(msg) {
+            var contentlist = [];
+            var inputbox = document.getElementsByClassName("input-box")[0];
+            var message = msg ?? inputbox.value;
+            if (message && ws && ws.readyState === WebSocket.OPEN) {
+                var old = localStorage.getItem("chathistory");
+                var filteredObject;
+                if (old == null) {
+                    old = [{
+                        record: [],
+                        id: trygetsession(),
+                        title: "New Chat",
+                        date: Date.now()
+                    }];
+                    filteredObject = old[0];
+                }
+                else {
+                    old = JSON.parse(old);
+                    var filteredObjects = old.filter(obj => obj.id === trygetsession());
+                    if (filteredObjects.length == 0) {
+                        filteredObject = {
+                            record: [],
+                            id: trygetsession(),
+                            title: "New Chat",
+                            date: Date.now()
+                        };
+                        old.push(filteredObject);
+                    }
+                    else {
+                        filteredObject = filteredObjects[0];
+                    }
+                }
+                contentlist = filteredObject.record;
+                contentlist.push({ Type: 0, Comment: message });
+                filteredObject.date = Date.now();
+                localStorage.setItem("chathistory", JSON.stringify(old));
+                relpy = '';
+                var currs = document.getElementsByClassName("chatcurrent");
+                Array.prototype.forEach.call(currs, function (curr) {
+                    curr.setAttribute("class", "message");
+                });
+                if (sessionStorage.getItem("systemprompt") != null && sessionStorage.getItem("systemprompt") != '') {
+
+                    contentlist.unshift({ Type: 2, Comment: sessionStorage.getItem("systemprompt") });
+                }
+                ws.send(message);
+                inputbox.value = '';
+                document.getElementsByClassName("container")[0].style.display = 'none';
+                document.getElementsByClassName("pre-prompt")[0].style.display = 'none';
+                document.getElementsByClassName("chatcontent")[0].style.display = 'flex';
+                adduser(message);
+                addchat("<div id=\"promptcircle\"></div>")
+                firstcheck = 1;
+            }
+        }
         function adduser(str) {
-            var newdiv = "<div class=\"userchat\"><div class=\"avatar\"><div class=\"circleuser\"></div></div><div class=\"name\">你</div><div class=\"message\">" + str + "</div></div>";
+            var newdiv = "<div class=\"userchat\"><div class=\"avatar\"><div class=\"circleuser\">" + nickName.charAt(0).toUpperCase() + "</div></div><div class=\"othermsg\"><div class=\"name\">你</div><div class=\"message\"><p>" + str + "</p></div></div></div>";
             var content = document.getElementsByClassName("chatcontent")[0];
             content.innerHTML += newdiv;
         }
         function addchat(str) {
-            var newdiv = "<div class=\"chatgpt\"><div class=\"avatar\"><div class=\"circlechat\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 41 41\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"icon-sm\" role=\"img\"><path d=\"M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z\" fill=\"#ffffff\"></path></svg></div></div><div class=\"name\">ChatGPT</div><div class=\"message chatcurrent\">" + str + "</div></div>";
+            var newdiv = "<div class=\"chatgpt\"><div class=\"avatar\"><div class=\"circlechat\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 41 41\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"icon-sm\" role=\"img\"><path d=\"M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z\" fill=\"#ffffff\"></path></svg></div></div><div class=\"othermsg\"><div class=\"name\">ChatGPT</div><div class=\"message chatcurrent\">" + marked.marked(str) + "</div></div></div>";
             var content = document.getElementsByClassName("chatcontent")[0];
             content.innerHTML += newdiv;
         }
         function appendchat(str) {
             var content = document.getElementsByClassName("chatcurrent")[0];
-            content.innerText += str;
+            content.innerHTML = marked.marked(str);
+        }
+        function newchat() {
+            sessionStorage.setItem("session", generateRandomString());
+            window.history.replaceState({}, '', '/index.html?session=' + sessionStorage.getItem("session"));
+        }
+        function trygetsession() {
+            const regex = /^[A-Za-z0-9]{32}$/;
+            if (sessionStorage.getItem("session") == null || sessionStorage.getItem("session") == undefined) {
+                newchat();
+            }
+            else if (!regex.test(sessionStorage.getItem("session"))) {
+                newchat();
+            }
+            return sessionStorage.getItem("session");
+        }
+        function generateRandomString() {
+            const chars =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let result = "";
+            for (let i = 0; i < 32; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        function InitHistory() {
+            document.getElementsByClassName("container")[0].style.display = 'flex';
+            document.getElementsByClassName("pre-prompt")[0].style.display = 'flex';
+            document.getElementsByClassName("chatcontent")[0].style.display = 'none';
+            document.getElementsByClassName("chatcontent")[0].innerHTML = "";
+            document.getElementsByClassName("menu-body")[0].innerHTML = "";
+            const url = window.location.href;
+            const urlObj = new URL(url);
+            const params = new URLSearchParams(urlObj.search);
+            const param1 = params.get('session');
+            var filteredObjects;
+            if (param1) {
+                var old = localStorage.getItem("chathistory");
+                if (old != null) {
+                    filteredObjects = JSON.parse(old).filter(obj => obj.id === param1)[0];
+                    if (filteredObjects) {
+                        document.getElementsByClassName("container")[0].style.display = 'none';
+                        document.getElementsByClassName("pre-prompt")[0].style.display = 'none';
+                        document.getElementsByClassName("chatcontent")[0].style.display = 'flex';
+                        filteredObjects.record.forEach(function (item) {
+                            if (item.Type == 0) {
+                                adduser(item.Comment);
+                            }
+                            else if (item.Type == 1) {
+                                addchat(item.Comment);
+                            }
+                        });
+                    }
+                }
+            }
+            var old = localStorage.getItem("chathistory");
+            if (old != null) {
+                old = JSON.parse(old)
+                old.sort((a, b) => {
+                    return b.date - a.date;
+                });
+                var body = document.getElementsByClassName("menu-body")[0];
+                //首先检测当天是否有记录
+                const todayRecords = old.filter(record => checkDate(record.date) == "今天");
+                if (todayRecords.length > 0) {
+                    body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">今天</div>";
+                    loadData(body, todayRecords, filteredObjects);
+                }
+                const yesterdayRecords = old.filter(record => checkDate(record.date) == "昨天");
+                if (yesterdayRecords.length > 0) {
+                    body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">昨天</div>";
+                    loadData(body, yesterdayRecords, filteredObjects);
+                }
+                const sevenDaysAgoRecords = old.filter(record => checkDate(record.date) == "过去7天");
+                if (sevenDaysAgoRecords.length > 0) {
+                    body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">过去7天</div>";
+                    loadData(body, sevenDaysAgoRecords, filteredObjects);
+                }
+                const passSevenDaysRecords = old.filter(record => checkDate(record.date) == "7天以前");
+                if (passSevenDaysRecords.length > 0) {
+                    body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">7天以前</div>";
+                    loadData(body, passSevenDaysRecords, filteredObjects);
+                }
+            }
+        }
+        function loadData(body, data, filteredObjects) {
+            data.forEach(function (item, index) {
+                var s = "<div onclick=\"newpage('" + item.id + "')\" class=\"menu-body-title " + (filteredObjects && item.id == filteredObjects.id ? "titleactive" : "") + "\"><span class=\"titlespan\">" + item.title + "</span><span onclick=\"delpage('" + item.id + "')\" class=\"closed\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"icon-md\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z\" fill=\"currentColor\"></path></svg></span></div>";
+                body.innerHTML += s;
+            })
+        }
+        function checkDate(timestamp) {
+            const inputDate = new Date(timestamp);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+            inputDate.setHours(0, 0, 0, 0); // 将时间设置为午夜，用于日期比较
+            today.setHours(0, 0, 0, 0);
+            yesterday.setHours(0, 0, 0, 0);
+            sevenDaysAgo.setHours(0, 0, 0, 0);
+            if (inputDate.getTime() === today.getTime()) {
+                return "今天";
+            } else if (inputDate.getTime() === yesterday.getTime()) {
+                return "昨天";
+            } else if (inputDate >= sevenDaysAgo) {
+                return "过去7天";
+            } else {
+                return "7天以前";
+            }
+        }
+        function newpage(session) {
+            sessionStorage.setItem("session", session);
+            window.history.replaceState({}, '', '/index.html?session=' + trygetsession());
+            InitHistory();
+        }
+        function delpage(session) {
+            event.stopPropagation();
+            showDialog("删除确认", "<p>即将删除当前对话的历史记录,请确认</p>",
+                function () {
+                    var old = localStorage.getItem("chathistory");
+                    if (old != null) {
+                        old = JSON.parse(old);
+                        let index = old.findIndex(obj => obj.id === session);
+                        if (index !== -1) {
+                            old.splice(index, 1);
+                        }
+                        localStorage.setItem("chathistory", JSON.stringify(old));
+                    }
+                    if (session == trygetsession())
+                        newchat();
+                    InitHistory();
+                    return true;
+                });
+        }
+
+        document.getElementsByClassName("reset-btn")[0].addEventListener('click', function (event) {
+            showDialog("确认新开一个话题吗?", "将清空当前话题并刷新页面进入新的话题.", confirmnewchat);
+        });
+        function tipmessage(newMessage) {
+            const tip = document.getElementById('tip');
+            tip.textContent = newMessage;
+            tip.classList.add('show');
+            if (window.tipTimeout) {
+                clearTimeout(window.tipTimeout);
+            }
+            window.tipTimeout = setTimeout(() => {
+                tip.classList.remove('show');
+            }, 3000);
         }
     </script>
 </body>

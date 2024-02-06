@@ -34,7 +34,7 @@ namespace WebSite.Controllers
             while (!result.CloseStatus.HasValue)
             {
                 var receivedMessage = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
-                var aiResponse = CustService.session.ChatAsync(new ChatHistory.Message(AuthorRole.User, receivedMessage), new InferenceParams { Temperature = 0.6f, AntiPrompts = ["User:"] });
+                var aiResponse = CustService.session.ChatAsync(new ChatHistory.Message(AuthorRole.User, $"<s>[INST] {receivedMessage} [/INST]"), new InferenceParams { Temperature = 0.6f, AntiPrompts = ["User:"] });
                 await foreach (var data in aiResponse)
                 {
                     var responseData = System.Text.Encoding.UTF8.GetBytes(data);
