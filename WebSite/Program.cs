@@ -1,3 +1,4 @@
+using System.Text;
 using WebSite;
 using WebSite.Controllers;
 
@@ -22,6 +23,5 @@ app.UseWebSockets();
 app.UseMiddleware<WebSocketMiddleware>();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+    pattern: "{controller=Home}/{action=Index}/{param?}");
 app.Run("http://*:80");

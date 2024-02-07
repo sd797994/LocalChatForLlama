@@ -31,9 +31,9 @@ namespace WebSite
                 sessionDic.TryAdd(id, new ChatSession(new InteractiveExecutor(context)));
             return sessionDic[id];
         }
-        public static async IAsyncEnumerable<string> ChatAsync(string session,string message)
+        public static async IAsyncEnumerable<string> ChatAsync(string session,string message,string antiPrompt)
         {
-            var aiResponse = GetSessionById(session).ChatAsync(new ChatHistory.Message(AuthorRole.User, $"USER:{message}\nASSITANT:"), new InferenceParams { Temperature = 0.7f, AntiPrompts = ["wsend"] });
+            var aiResponse = GetSessionById(session).ChatAsync(new ChatHistory.Message(AuthorRole.User, $"USER:{message}\nASSITANT:"), new InferenceParams { Temperature = 0.7f, AntiPrompts = [antiPrompt] });
             await foreach (var response in aiResponse)
             {
                 yield return response;

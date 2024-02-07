@@ -206,7 +206,7 @@
             if (ws && ws.readyState === WebSocket.OPEN) {
                 ws.close();
             }
-            ws = new WebSocket(wsurl + "/?session=" + trygetsession());
+            ws = new WebSocket(wsurl + "/" + trygetsession());
             ws.onmessage = wscallback;
         }
         getuser();
@@ -219,8 +219,10 @@
                 if (event.data.includes("wsend")) {
                     appendchat("抱歉,AI没有产生有效的响应，请重试");
                     firstcheck = 0;
-                    var curr = document.getElementsByClassName("chatcurrent")[0];
-                    curr.setAttribute("class", "message");
+                    var currs = document.getElementsByClassName("chatcurrent");
+                    Array.prototype.forEach.call(currs, function (curr) {
+                        curr.setAttribute("class", "message");
+                    });
                     var old = localStorage.getItem("chathistory");
                     if (old != null) {
                         old = JSON.parse(old);
@@ -246,7 +248,7 @@
                     Array.prototype.forEach.call(currs, function (curr) {
                         curr.setAttribute("class", "message");
                     });
-                    window.history.replaceState({}, '', '/?session=' + trygetsession());
+                    window.history.replaceState({}, '', '/' + trygetsession());
                     localStorage.setItem("chathistory", JSON.stringify(old));
                     if (filteredObjects.record.length == 2) {
                         InitHistory();
@@ -333,14 +335,15 @@
             content.scrollTop = content.scrollHeight;
         }
         function appendchat(str) {
-            var chatcurrent = document.getElementsByClassName("chatcurrent")[0];
+            var chatcurrents = document.getElementsByClassName("chatcurrent");
+            var chatcurrent = chatcurrents[chatcurrents.length - 1];
             chatcurrent.innerHTML = marked.parse(str);
             var content = document.getElementsByClassName("chatcontent")[0];
             content.scrollTop = content.scrollHeight;
         }
         function newchat() {
             sessionStorage.setItem("session", generateRandomString());
-            window.history.replaceState({}, '', '/?session=' + sessionStorage.getItem("session"));
+            window.history.replaceState({}, '', '/' + sessionStorage.getItem("session"));
             getuser();
         }
         function trygetsession() {
@@ -368,10 +371,8 @@
             document.getElementsByClassName("chatcontent")[0].style.display = 'none';
             document.getElementsByClassName("chatcontent")[0].innerHTML = "";
             document.getElementsByClassName("menu-body")[0].innerHTML = "";
-            const url = window.location.href;
-            const urlObj = new URL(url);
-            const params = new URLSearchParams(urlObj.search);
-            const param1 = params.get('session');
+            const segments = window.location.pathname.split('/');
+            const param1 = segments[1];
             var filteredObjects;
             if (param1) {
                 var old = localStorage.getItem("chathistory");
@@ -453,7 +454,7 @@
         }
         function newpage(session) {
             sessionStorage.setItem("session", session);
-            window.history.replaceState({}, '', '/?session=' + trygetsession());
+            window.history.replaceState({}, '', '/' + trygetsession());
             InitHistory();
         }
         window.newpage = newpage;
