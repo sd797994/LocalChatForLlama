@@ -1,4 +1,22 @@
-﻿body {
+﻿::-webkit-scrollbar {
+    width: 8px;
+    scrollbar-color: #888 #343541;
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar-track {
+    background: #343541;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 8px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #888;
+    }
+body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #343541;
     color: white;
@@ -153,8 +171,6 @@ h1 {
 
 .chatcontent {
     overflow-y: auto;
-    scrollbar-color: #888 #343541;
-    scrollbar-width: thin;
     flex-grow: 1;
     display: none;
     width: 100%;
@@ -168,23 +184,10 @@ h1 {
         line-height: 1.7;
         font-size: 16px;
     }
-
-    .chatcontent::-webkit-scrollbar {
-        width: 6px;
+    .chatcontent li {
+        line-height: 1.7;
+        font-size: 16px;
     }
-
-    .chatcontent::-webkit-scrollbar-track {
-        background: #343541;
-    }
-
-    .chatcontent::-webkit-scrollbar-thumb {
-        background: #555;
-        border-radius: 6px;
-    }
-
-        .chatcontent::-webkit-scrollbar-thumb:hover {
-            background: #888;
-        }
 
     .chatcontent div {
         margin: 10px;
@@ -252,7 +255,7 @@ h1 {
     .chatcontent .userchat {
         margin: 0;
         padding: 0;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         min-width: 600px;
         display: flex;
     }
@@ -260,7 +263,7 @@ h1 {
     .chatcontent .chatgpt {
         margin: 0;
         padding: 0;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         min-width: 600px;
         display: flex;
     }
@@ -478,23 +481,6 @@ pre {
     -ms-user-select: none; /* IE 10+/Edge */
     user-select: none; /* 标准语法 */
 }
-
-    .menu-body::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .menu-body::-webkit-scrollbar-track {
-        background: #343541;
-    }
-
-    .menu-body::-webkit-scrollbar-thumb {
-        background: #555;
-        border-radius: 6px;
-    }
-
-        .menu-body::-webkit-scrollbar-thumb:hover {
-            background: #888;
-        }
 
 .menu-body-title {
     height: 40px;

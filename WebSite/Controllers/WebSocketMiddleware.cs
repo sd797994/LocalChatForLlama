@@ -1,8 +1,6 @@
 ﻿using LLama.Common;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Concurrent;
 using System.Net.WebSockets;
+using System.Text;
 
 namespace WebSite.Controllers
 {
@@ -26,18 +24,17 @@ namespace WebSite.Controllers
                 await _next(context);
             }
         }
-
         private async Task Echo(HttpContext context, WebSocket webSocket)
         {
             var buffer = new byte[1024 * 4];
             WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             while (!result.CloseStatus.HasValue)
             {
-                var receivedMessage = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
-                var aiResponse = CustService.session.ChatAsync(new ChatHistory.Message(AuthorRole.User, $"<s>[INST] {receivedMessage} [/INST]"), new InferenceParams { Temperature = 0.6f, AntiPrompts = ["User:"] });
+                var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                var aiResponse = CustService.session.ChatAsync(new ChatHistory.Message(AuthorRole.User, $"<s>[INST] {receivedMessage} [/INST]"), new InferenceParams { Temperature = 0.7f, AntiPrompts = ["wsend"] });
                 await foreach (var data in aiResponse)
                 {
-                    var responseData = System.Text.Encoding.UTF8.GetBytes(data);
+                    var responseData = Encoding.UTF8.GetBytes(data);
                     await webSocket.SendAsync(new ArraySegment<byte>(responseData, 0, responseData.Length), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);

@@ -6,7 +6,7 @@ namespace WebSite
 {
     public class CustService : IHostedService
     {
-        string modelPath = //定位到你的".gguf"模型所在位置;
+        string modelPath = "C:\\Users\\Administrator\\source\\repos\\LocalChatForLlama\\mistral-7b-instruct-v0.2.Q4_K_M.gguf"; //定位到你的".gguf"模型所在位置;
         public static ChatSession session;
         public static LLamaContext context;
         public static InteractiveExecutor ex;
