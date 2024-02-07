@@ -31,8 +31,7 @@ namespace WebSite.Controllers
             while (!result.CloseStatus.HasValue)
             {
                 var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                var aiResponse = CustService.session.ChatAsync(new ChatHistory.Message(AuthorRole.User, $"<s>[INST] {receivedMessage} [/INST]"), new InferenceParams { Temperature = 0.7f, AntiPrompts = ["wsend"] });
-                await foreach (var data in aiResponse)
+                await foreach (var data in CustService.ChatAsync(context.Request.Query["session"].ToString(), receivedMessage))
                 {
                     var responseData = Encoding.UTF8.GetBytes(data);
                     await webSocket.SendAsync(new ArraySegment<byte>(responseData, 0, responseData.Length), WebSocketMessageType.Text, true, CancellationToken.None);

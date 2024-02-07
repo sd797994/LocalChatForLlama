@@ -117,6 +117,9 @@
         </div>
     </div>
     <script type="module">
+        var nickName = '新用户';
+        var ws;
+        var wsurl = 'ws://127.0.0.1:80';
         import { Marked } from "./js/marked.min.js";
         import { markedHighlight } from "./js/marked-highlight.min.js";
         import hljs from './js/highlight.js';
@@ -181,11 +184,8 @@
         }
         window.hideDialog = hideDialog;
         function confirmnewchat() {
-            newchat();
-            document.getElementsByClassName("chatcontent")[0].innerHTML = "";
-            document.getElementsByClassName("container")[0].style.display = 'flex';
-            document.getElementsByClassName("pre-prompt")[0].style.display = 'flex';
-            document.getElementsByClassName("chatcontent")[0].style.display = 'none';
+            newchat(); 
+            InitHistory();
             hideDialog();
             return true;
         }
@@ -197,16 +197,16 @@
                 hideDialog();
             }
         }
-        var nickName = '新用户';
-        var ws;
-        var wsurl = 'ws://127.0.0.1:80';
         function getuser() {
             document.getElementsByClassName("user-name")[0].innerText = nickName;
             var elements = document.getElementsByClassName("circleuser")
             Array.prototype.forEach.call(elements, function (element) {
                 element.innerText = nickName.charAt(0).toUpperCase();
             });
-            ws = new WebSocket(wsurl);
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
+            ws = new WebSocket(wsurl + "/?session=" + trygetsession());
             ws.onmessage = wscallback;
         }
         getuser();
@@ -341,6 +341,7 @@
         function newchat() {
             sessionStorage.setItem("session", generateRandomString());
             window.history.replaceState({}, '', '/?session=' + sessionStorage.getItem("session"));
+            getuser();
         }
         function trygetsession() {
             const regex = /^[A-Za-z0-9]{32}$/;
@@ -402,28 +403,28 @@
                 const todayRecords = old.filter(record => checkDate(record.date) == "今天");
                 if (todayRecords.length > 0) {
                     body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">今天</div>";
-                    loadData(body, todayRecords, filteredObjects);
+                    loadData(body, todayRecords);
                 }
                 const yesterdayRecords = old.filter(record => checkDate(record.date) == "昨天");
                 if (yesterdayRecords.length > 0) {
                     body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">昨天</div>";
-                    loadData(body, yesterdayRecords, filteredObjects);
+                    loadData(body, yesterdayRecords);
                 }
                 const sevenDaysAgoRecords = old.filter(record => checkDate(record.date) == "过去7天");
                 if (sevenDaysAgoRecords.length > 0) {
                     body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">过去7天</div>";
-                    loadData(body, sevenDaysAgoRecords, filteredObjects);
+                    loadData(body, sevenDaysAgoRecords);
                 }
                 const passSevenDaysRecords = old.filter(record => checkDate(record.date) == "7天以前");
                 if (passSevenDaysRecords.length > 0) {
                     body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">7天以前</div>";
-                    loadData(body, passSevenDaysRecords, filteredObjects);
+                    loadData(body, passSevenDaysRecords);
                 }
             }
         }
-        function loadData(body, data, filteredObjects) {
+        function loadData(body, data) {
             data.forEach(function (item, index) {
-                var s = "<div onclick=\"newpage('" + item.id + "')\" class=\"menu-body-title " + (filteredObjects && item.id == filteredObjects.id ? "titleactive" : "") + "\"><span class=\"titlespan\">" + item.title + "</span><span onclick=\"delpage('" + item.id + "')\" class=\"closed\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"icon-md\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z\" fill=\"currentColor\"></path></svg></span></div>";
+                var s = "<div onclick=\"newpage('" + item.id + "')\" class=\"menu-body-title " + (item.id == trygetsession() ? "titleactive" : "") + "\"><span class=\"titlespan\">" + item.title + "</span><span onclick=\"delpage('" + item.id + "')\" class=\"closed\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"icon-md\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z\" fill=\"currentColor\"></path></svg></span></div>";
                 body.innerHTML += s;
             })
         }
