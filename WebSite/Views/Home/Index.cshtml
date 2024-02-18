@@ -81,7 +81,7 @@
                     <p>编写一份简单的日报</p>
                     <p style="color:#888">我希望你帮我生成一句话的设计师项目进度日报大纲</p>
                 </div>
-                <div class="box" onclick="SendMessage('请用一句话讲一个历史上有趣的典故')">
+                <div class="box" onclick="SendMessage('请用一句话讲一个中国三国时代时上有趣的历史典故')">
                     <p>讲一个有趣的事实</p>
                     <p style="color:#888">请用一句话讲一个历史上有趣的典故</p>
                 </div>
@@ -132,7 +132,6 @@
                 }
             })
         );
-
         document.getElementsByClassName("foot-content")[0].addEventListener('click', function () {
             togglefootmenu();
         });
@@ -197,7 +196,7 @@
                 hideDialog();
             }
         }
-        function getuser() {
+        async function getuser() {
             document.getElementsByClassName("user-name")[0].innerText = nickName;
             var elements = document.getElementsByClassName("circleuser")
             Array.prototype.forEach.call(elements, function (element) {
@@ -206,8 +205,25 @@
             if (ws && ws.readyState === WebSocket.OPEN) {
                 ws.close();
             }
-            ws = new WebSocket(wsurl + "/" + trygetsession());
+            ws = await connectWebSocket(wsurl + "/" + trygetsession());
             ws.onmessage = wscallback;
+        }
+        function connectWebSocket(wsUrl) {
+            return new Promise((resolve, reject) => {
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    console.log("WebSocket connection established");
+                    resolve(ws);
+                };
+                ws.onerror = (error) => {
+                    console.error("WebSocket connection error:", error);
+                    reject(error); 
+                };
+                ws.onmessage = (event) => {
+                    console.log("Received message:", event.data);
+                };
+            });
         }
         getuser();
         InitHistory();
@@ -249,9 +265,11 @@
                         curr.setAttribute("class", "message");
                     });
                     window.history.replaceState({}, '', '/' + trygetsession());
-                    localStorage.setItem("chathistory", JSON.stringify(old));
                     if (filteredObjects.record.length == 2) {
+                        localStorage.setItem("chathistory", JSON.stringify(old));
                         InitHistory();
+                        const truncateString = (str) => str.length > 50 ? str.slice(0, 50) + "..." : str;
+                        fetchCreateTitle(old, filteredObjects, '你是一个总结标题的助手，你需要通过总结以下对话生成一个总结标题，标题长度在10个字以内，内容如下【Q：\"' + truncateString(filteredObjects.record[0].Comment) + '\",A：\"' + truncateString(filteredObjects.record[1].Comment) + '\"】');
                     }
                 }
                 else {
@@ -266,10 +284,16 @@
                 SendMessage();
             }
         });
-        function SendMessage(msg) {
+        async function SendMessage(msg) {
             var contentlist = [];
             var inputbox = document.getElementsByClassName("input-box")[0];
             var message = msg ?? inputbox.value;
+            var pathArray = window.location.pathname.split('/');
+            var lastPart = pathArray[pathArray.length - 1];
+            if (lastPart == "") {
+               await newchat();
+            }
+            console.log("ws.readyState=" + ws.readyState);
             if (message && ws && ws.readyState === WebSocket.OPEN) {
                 var old = localStorage.getItem("chathistory");
                 var filteredObject;
@@ -341,10 +365,10 @@
             var content = document.getElementsByClassName("chatcontent")[0];
             content.scrollTop = content.scrollHeight;
         }
-        function newchat() {
+        async function newchat() {
             sessionStorage.setItem("session", generateRandomString());
             window.history.replaceState({}, '', '/' + sessionStorage.getItem("session"));
-            getuser();
+            await getuser();
         }
         function trygetsession() {
             const regex = /^[A-Za-z0-9]{32}$/;
@@ -491,6 +515,25 @@
             window.tipTimeout = setTimeout(() => {
                 tip.classList.remove('show');
             }, 3000);
+        }
+        async function fetchCreateTitle(old, filteredObjects, content) {
+            try {
+                const response = await fetch('/createtitle?content=' + content, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                filteredObjects.title = data;
+                localStorage.setItem("chathistory", JSON.stringify(old));
+                InitHistory();
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
         }
     </script>
 </body>
