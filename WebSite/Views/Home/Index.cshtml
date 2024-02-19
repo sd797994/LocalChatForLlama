@@ -393,6 +393,7 @@
             document.getElementsByClassName("pre-prompt")[0].style.display = 'flex';
             document.getElementsByClassName("chatcontent")[0].style.display = 'none';
             document.getElementsByClassName("chatcontent")[0].innerHTML = "";
+            var scrollPosition = document.getElementsByClassName("menu-body")[0].scrollTop;
             document.getElementsByClassName("menu-body")[0].innerHTML = "";
             const segments = window.location.pathname.split('/');
             const param1 = segments[1];
@@ -445,6 +446,7 @@
                     body.innerHTML += "<div style=\"color:#888;font-size:13px;text-align:left;width:100%;padding-left:40px;padding-bottom:10px;padding-top:20px;\">7天以前</div>";
                     loadData(body, passSevenDaysRecords);
                 }
+                body.scrollTop = scrollPosition;
             }
         }
         function loadData(body, data) {
