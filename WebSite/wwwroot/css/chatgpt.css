@@ -480,8 +480,10 @@ pre {
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE 10+/Edge */
     user-select: none; /* 标准语法 */
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
+    margin-right: 2px;
+    scrollbar-width: thin;
 }
 
     .menu-body::-webkit-scrollbar-track {
