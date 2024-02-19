@@ -81,13 +81,13 @@
                     <p>编写一份简单的日报</p>
                     <p style="color:#888">我希望你帮我生成一句话的设计师项目进度日报大纲</p>
                 </div>
-                <div class="box" onclick="SendMessage('请用一句话讲一个中国三国时代时上有趣的历史典故')">
+                <div class="box" onclick="SendMessage('请用一句话讲一个中国三国时代发生的有趣历史典故')">
                     <p>讲一个有趣的事实</p>
                     <p style="color:#888">请用一句话讲一个历史上有趣的典故</p>
                 </div>
-                <div class="box" onclick="SendMessage('我需要你帮我计算12+24等于多少,给出解题步骤')">
+                <div class="box" onclick="SendMessage('我需要你帮我计算12×24等于多少,给出解题步骤')">
                     <p>计算数学题</p>
-                    <p style="color:#888">我需要你帮我计算12+24等于多少</p>
+                    <p style="color:#888">我需要你帮我计算12×24等于多少</p>
                 </div>
             </div>
             <div class="input">
@@ -189,7 +189,6 @@
             return true;
         }
 
-        // Optional: Close the dialog if the user clicks anywhere outside of it
         window.onclick = function (event) {
             var dialog = document.getElementById("myDialog");
             if (event.target == dialog) {
@@ -403,6 +402,7 @@
                 if (old != null) {
                     filteredObjects = JSON.parse(old).filter(obj => obj.id === param1)[0];
                     if (filteredObjects) {
+                        document.title = filteredObjects.title;
                         document.getElementsByClassName("container")[0].style.display = 'none';
                         document.getElementsByClassName("pre-prompt")[0].style.display = 'none';
                         document.getElementsByClassName("chatcontent")[0].style.display = 'flex';

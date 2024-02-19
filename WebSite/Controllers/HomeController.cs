@@ -24,7 +24,7 @@ namespace WebSite.Controllers
             {
                 sb.Append(data);
             }
-            return sb.ToString().Replace(TextProcessor.wsend, "").Replace("\"", "").Replace("\n", "");
+            return sb.ToString().Replace(TextProcessor.wsend, "").Replace("\"", "").Replace("\n", "").Replace("БъЬтЃК", "");
         }
     }
 }

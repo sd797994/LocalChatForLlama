@@ -170,7 +170,6 @@ h1 {
 }
 
 .chatcontent {
-    overflow-y: auto;
     flex-grow: 1;
     display: none;
     width: 100%;
@@ -365,7 +364,7 @@ pre {
     background-color: #f0f0f0;
     overflow-x: hidden;
     transition: margin-left 0.2s;
-    height: 100%;
+    height: 100vh;
     background-color: #000;
     color: #fff;
     display: flex;
@@ -432,6 +431,7 @@ pre {
     display: flex;
     align-items: center;
     justify-content: center;
+    height:60px;
 }
 
 .menu-head-title {
@@ -480,10 +480,26 @@ pre {
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE 10+/Edge */
     user-select: none; /* 标准语法 */
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
+    .menu-body::-webkit-scrollbar-track {
+        background: #000;
+    }
+
+    .menu-body::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 8px;
+    }
+
+        .menu-body::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+
 .menu-body-title {
-    height: 40px;
+    min-height: 40px;
     width: 80%;
     display: flex;
     align-items: center;
@@ -500,7 +516,7 @@ pre {
         white-space: nowrap;
         overflow: hidden;
         position: relative;
-        width: 180px;
+        width: 200px;
     }
 
         .menu-body-title .titlespan::after {
@@ -510,7 +526,7 @@ pre {
             top: 0;
             bottom: 0;
             width: 40px;
-            background: linear-gradient(to right, transparent, black);
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 1));
         }
 
     .menu-body-title:hover {
