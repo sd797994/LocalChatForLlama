@@ -19,12 +19,8 @@ namespace WebSite.Controllers
         [HttpGet("/createtitle")]
         public async Task<string> CreateTitle(string content)
         {
-            StringBuilder sb = new StringBuilder();
-            await foreach (var data in CustService.ChatAsync(Guid.NewGuid().ToString(), content, TextProcessor.wsend))
-            {
-                sb.Append(data);
-            }
-            return sb.ToString().Replace(TextProcessor.wsend, "").Replace("\"", "").Replace("\n", "").Replace("标题：", "");
+            var result = await CustService.ChatAllAsync(content, TextProcessor.wsend);
+            return result.Replace(TextProcessor.wsend, "").Replace("\"", "").Replace("\n", "").Replace("标题：", "");
         }
     }
 }

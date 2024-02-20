@@ -258,6 +258,7 @@
                     }
                     var filteredObjects = old.filter(obj => obj.id === trygetsession())[0];
                     filteredObjects.record.push({ Type: 1, Comment: relpy.replace("wsend", "") });
+                    localStorage.setItem("chathistory", JSON.stringify(old));
                     firstcheck = 0;
                     var currs = document.getElementsByClassName("chatcurrent");
                     Array.prototype.forEach.call(currs, function (curr) {
@@ -268,7 +269,7 @@
                         localStorage.setItem("chathistory", JSON.stringify(old));
                         InitHistory();
                         const truncateString = (str) => str.length > 50 ? str.slice(0, 50) + "..." : str;
-                        fetchCreateTitle(old, filteredObjects, '你是一个总结标题的助手，你需要通过总结以下对话生成一个总结标题，标题长度在10个字以内，内容如下【Q：\"' + truncateString(filteredObjects.record[0].Comment) + '\",A：\"' + truncateString(filteredObjects.record[1].Comment) + '\"】');
+                        fetchCreateTitle(filteredObjects.id, '你是一个总结标题的助手，你需要通过总结以下对话生成一个总结标题，标题长度在10个字以内，内容如下【Q：\"' + truncateString(filteredObjects.record[0].Comment) + '\",A：\"' + truncateString(filteredObjects.record[1].Comment) + '\"】');
                     }
                 }
                 else {
@@ -451,7 +452,7 @@
         }
         function loadData(body, data) {
             data.forEach(function (item, index) {
-                var s = "<div onclick=\"newpage('" + item.id + "')\" class=\"menu-body-title " + (item.id == trygetsession() ? "titleactive" : "") + "\"><span class=\"titlespan\">" + item.title + "</span><span onclick=\"delpage('" + item.id + "')\" class=\"closed\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"icon-md\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z\" fill=\"currentColor\"></path></svg></span></div>";
+                var s = "<div onclick=\"newpage('" + item.id + "')\" class=\"menu-body-title " + (item.id == trygetsession() ? "titleactive" : "") + "\"><span id=\"" + item.id + "\" class=\"titlespan\">" + item.title + "</span><span onclick=\"delpage('" + item.id + "')\" class=\"closed\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"icon-md\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z\" fill=\"currentColor\"></path></svg></span></div>";
                 body.innerHTML += s;
             })
         }
@@ -518,24 +519,35 @@
                 tip.classList.remove('show');
             }, 3000);
         }
-        async function fetchCreateTitle(old, filteredObjects, content) {
-            try {
-                const response = await fetch('/createtitle?content=' + content, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+        function fetchCreateTitle(id, content) {
+            fetch('/createtitle?content=' + content, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
                 }
-                const data = await response.json();
-                filteredObjects.title = data;
-                localStorage.setItem("chathistory", JSON.stringify(old));
-                InitHistory();
-            } catch (error) {
-                console.error('Failed to fetch data:', error);
-            }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    var old = localStorage.getItem("chathistory");
+                    if (old != null) {
+                        old = JSON.parse(old);
+                    }
+                    var filteredObjects = old.filter(obj => obj.id === id)[0];
+                    filteredObjects.title = data;
+                    localStorage.setItem("chathistory", JSON.stringify(old));
+                    document.getElementById(id).innerText = data;
+                    if (id == trygetsession()) {
+                        document.title = data;
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to fetch data:', error);
+                });
         }
     </script>
 </body>

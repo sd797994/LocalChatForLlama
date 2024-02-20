@@ -483,7 +483,6 @@ pre {
     overflow-y: auto;
     overflow-x: hidden;
     margin-right: 2px;
-    scrollbar-width: thin;
 }
 
     .menu-body::-webkit-scrollbar-track {
