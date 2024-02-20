@@ -53,7 +53,7 @@ namespace WebSite
             {
                 await semaphoreSlim.WaitAsync();
                 session2.History.Messages.Clear();
-                var response = session2.ChatAsync(new ChatHistory.Message(AuthorRole.User, $"Instruct:{message}\nOutput:"), new InferenceParams { Temperature = 0.3f, AntiPrompts = [antiPrompt] });
+                var response = session2.ChatAsync(new ChatHistory.Message(AuthorRole.User, $"[INST]###USER:\n{message}\n###ASSISTANT:\n[/INST]"), new InferenceParams { Temperature = 0.3f, AntiPrompts = [antiPrompt] });
                 StringBuilder sb = new StringBuilder();
                 await foreach (var item in response)
                 {
