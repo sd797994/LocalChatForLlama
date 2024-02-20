@@ -1,11 +1,11 @@
 ﻿::-webkit-scrollbar {
     width: 8px;
-    scrollbar-color: #888 #343541;
+    scrollbar-color: #888 #212121;
     scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar-track {
-    background: #343541;
+    background: #212121;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -18,7 +18,7 @@
     }
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #343541;
+    background-color: #212121;
     color: white;
     margin: 0;
     padding: 0;
@@ -75,7 +75,7 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    background-color: #343541;
+    background-color: #212121;
 }
 
 .pre-prompt {
@@ -121,7 +121,7 @@ body {
 .input {
     border: 1px solid #555561;
     border-radius: 15px;
-    background-color: #343541;
+    background-color: #212121;
     padding: 10px 15px;
     height: 30px;
     width: 760px;
@@ -129,7 +129,7 @@ body {
 
 .input-box {
     border: none;
-    background-color: #343541;
+    background-color: #212121;
     color: #fff;
     height: 30px;
     font-family: Arial, sans-serif;
@@ -240,8 +240,7 @@ h1 {
         width: 22px;
         height: 22px;
         border-radius: 50%;
-        background-color: goldenrod;
-        border: solid 1px #aaa;
+        border: solid 1px #666;
         transform: translateX(-50%);
         display: flex;
         justify-content: center;
@@ -281,7 +280,7 @@ pre {
     display: flex;
     justify-content: center;
     border-radius: 10px;
-    background-color: #343541;
+    background-color: #212121;
     cursor: pointer;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
@@ -547,24 +546,24 @@ pre {
     }
 
 .titleactive .closed {
-    background: #343541;
+    background: #212121;
     display: block;
 }
 
 .titleactive .titlespan::after {
-    background: linear-gradient(to right, transparent, #343541);
+    background: linear-gradient(to right, transparent, #212121);
 }
 
 .titleactive {
-    background: #343541;
+    background: #212121;
 }
 
     .titleactive:hover {
-        background: #343541;
+        background: #212121;
     }
 
         .titleactive:hover .titlespan::after {
-            background: linear-gradient(to right, transparent, #343541);
+            background: linear-gradient(to right, transparent, #212121);
         }
 
 .menu-foot {
@@ -604,8 +603,7 @@ pre {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-color: goldenrod;
-    border: solid 1px #aaa;
+    border: solid 1px #666;
     transform: translateX(-50%);
     display: flex;
     justify-content: center;
@@ -692,7 +690,7 @@ pre {
     }
 
         .menu-foot-menu div:hover {
-            background: #343541;
+            background: #212121;
         }
 
         .menu-foot-menu div > * {

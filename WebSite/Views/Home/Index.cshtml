@@ -197,10 +197,6 @@
         }
         async function getuser() {
             document.getElementsByClassName("user-name")[0].innerText = nickName;
-            var elements = document.getElementsByClassName("circleuser")
-            Array.prototype.forEach.call(elements, function (element) {
-                element.innerText = nickName.charAt(0).toUpperCase();
-            });
             if (ws && ws.readyState === WebSocket.OPEN) {
                 ws.close();
             }
@@ -347,7 +343,7 @@
         }
         window.SendMessage = SendMessage;
         function adduser(str) {
-            var newdiv = "<div class=\"userchat\"><div class=\"avatar\"><div class=\"circleuser\">" + nickName.charAt(0).toUpperCase() + "</div></div><div class=\"othermsg\"><div class=\"name\">你</div><div class=\"message\"><p>" + str + "</p></div></div></div>";
+            var newdiv = "<div class=\"userchat\"><div class=\"avatar\"><div class=\"circleuser\"></div></div><div class=\"othermsg\"><div class=\"name\">你</div><div class=\"message\"><p>" + str + "</p></div></div></div>";
             var content = document.getElementsByClassName("chatcontent")[0];
             content.innerHTML += newdiv;
             content.scrollTop = content.scrollHeight;
