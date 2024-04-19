@@ -13,8 +13,9 @@ namespace WebSite
     {
         static string modelPath = "C:\\Users\\Administrator\\source\\repos\\LocalChatForLlama\\llava-v1.6-mistral-7b.Q4_K_M.gguf"; //定位到你的".gguf"对话模型所在位置;
         static string mmpmodelPath = "C:\\Users\\Administrator\\source\\repos\\LocalChatForLlama\\mmproj-mistral7b-f16-q6_k.gguf"; //定位到你的".gguf"CLIP模型所在位置;
-        //mistral-7b-evol-instruct-chinese.Q4_K_M.gguf 下载地址：https://huggingface.co/s3nh/Mistral-7B-Evol-Instruct-Chinese-GGUF/blob/main/mistral-7b-evol-instruct-chinese.Q4_K_M.gguf
-        //mmproj-mistral7b-f16-q6_k.gguf 下载地址：https://huggingface.co/cmp-nct/llava-1.6-gguf/resolve/main/mmproj-mistral7b-f16-q6_k.gguf?download=true
+        //对话模型：mistral-7b-evol-instruct-chinese.Q4_K_M.gguf 下载地址：https://huggingface.co/s3nh/Mistral-7B-Evol-Instruct-Chinese-GGUF/blob/main/mistral-7b-evol-instruct-chinese.Q4_K_M.gguf
+        //多模态模型：llava-v1.6-mistral-7b.Q4_K_M.gguf 下载地址：https://huggingface.co/mradermacher/llava-v1.6-mistral-7b-GGUF/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf
+        //CLIP模型：mmproj-mistral7b-f16-q6_k.gguf 下载地址：https://huggingface.co/cmp-nct/llava-1.6-gguf/resolve/main/mmproj-mistral7b-f16-q6_k.gguf?download=true
         static ConcurrentDictionary<string, (ChatSession, SemaphoreSlim)> sessionDic = new ConcurrentDictionary<string, (ChatSession, SemaphoreSlim)>();
         public async Task StartAsync(CancellationToken cancellationToken)
         {
