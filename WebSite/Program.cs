@@ -20,7 +20,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.UseWebSockets();
-app.UseMiddleware<WebSocketMiddleware>();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{param?}");

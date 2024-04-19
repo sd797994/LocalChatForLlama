@@ -91,6 +91,12 @@
                 </div>
             </div>
             <div class="input">
+                <div class="input-file-display">
+                </div>
+                <div class="input-file">
+                    <input type="file" id="file-input" style="display: none;" />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9 7C9 4.23858 11.2386 2 14 2C16.7614 2 19 4.23858 19 7V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15V9C5 8.44772 5.44772 8 6 8C6.55228 8 7 8.44772 7 9V15C7 17.7614 9.23858 20 12 20C14.7614 20 17 17.7614 17 15V7C17 5.34315 15.6569 4 14 4C12.3431 4 11 5.34315 11 7V15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15V9C13 8.44772 13.4477 8 14 8C14.5523 8 15 8.44772 15 9V15C15 16.6569 13.6569 18 12 18C10.3431 18 9 16.6569 9 15V7Z" fill="currentColor"></path></svg>
+                </div>
                 <input type="text" class="input-box" placeholder="发送消息给 ChatGPT...">
                 <button class="txt-submit" onclick="SendMessage()" />
                 <span>
@@ -119,7 +125,8 @@
     <script type="module">
         var nickName = '新用户';
         var ws;
-        var wsurl = 'ws://127.0.0.1:80';
+        var wsurl = 'ws://127.0.0.1:80/ws';
+        var upfile = [];
         import { Marked } from "./js/marked.min.js";
         import { markedHighlight } from "./js/marked-highlight.min.js";
         import hljs from './js/highlight.js';
@@ -319,7 +326,7 @@
                     }
                 }
                 contentlist = filteredObject.record;
-                contentlist.push({ Type: 0, Comment: message });
+                contentlist.push({ Type: 0, Comment: message, upfile });
                 filteredObject.date = Date.now();
                 localStorage.setItem("chathistory", JSON.stringify(old));
                 relpy = '';
@@ -331,18 +338,22 @@
 
                     contentlist.unshift({ Type: 2, Comment: sessionStorage.getItem("systemprompt") });
                 }
-                ws.send(message);
+                ws.send(JSON.stringify({ session: sessionStorage.getItem("session"), message, upfile }));
                 inputbox.value = '';
                 document.getElementsByClassName("container")[0].style.display = 'none';
                 document.getElementsByClassName("pre-prompt")[0].style.display = 'none';
                 document.getElementsByClassName("chatcontent")[0].style.display = 'flex';
-                adduser(message);
-                addchat("<div id=\"promptcircle\"></div>")
+                adduser(message, upfile);
+                addchat("<div id=\"promptcircle\"></div>");
                 firstcheck = 1;
+                cleanupfile();
             }
         }
         window.SendMessage = SendMessage;
-        function adduser(str) {
+        function adduser(str,file) {
+            if (file && file.length > 0) {
+                str += "<div class=\"input-file-display-show-big\" style=\"background-image:url('" + file[0] + "')\"></div>";
+            }
             var newdiv = "<div class=\"userchat\"><div class=\"avatar\"><div class=\"circleuser\"></div></div><div class=\"othermsg\"><div class=\"name\">你</div><div class=\"message\"><p>" + str + "</p></div></div></div>";
             var content = document.getElementsByClassName("chatcontent")[0];
             content.innerHTML += newdiv;
@@ -364,7 +375,12 @@
         async function newchat() {
             sessionStorage.setItem("session", generateRandomString());
             window.history.replaceState({}, '', '/' + sessionStorage.getItem("session"));
+            cleanupfile();
             await getuser();
+        }
+        function cleanupfile(){
+            upfile = [];
+            document.querySelector(".input-file-display").innerHTML = "";
         }
         function trygetsession() {
             const regex = /^[A-Za-z0-9]{32}$/;
@@ -406,7 +422,7 @@
                         document.getElementsByClassName("chatcontent")[0].style.display = 'flex';
                         filteredObjects.record.forEach(function (item) {
                             if (item.Type == 0) {
-                                adduser(item.Comment);
+                                adduser(item.Comment, item.upfile);
                             }
                             else if (item.Type == 1) {
                                 addchat(item.Comment);
@@ -545,6 +561,56 @@
                     console.error('Failed to fetch data:', error);
                 });
         }
+        document.querySelector('.input-file').addEventListener('click', () => {
+            document.getElementById('file-input').click(); // 模拟点击隐藏的文件输入
+        });
+
+        document.getElementById('file-input').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/uploadfile', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(text || 'Something went wrong');
+                        });
+                    }
+                    return response.json().catch(() => response.text());
+                })
+                .then(data => {
+                    event.target.value = '';
+                    if (typeof data === 'string') {
+                        alert(data);
+                    } else {
+                        displayFile(data.url);
+                    }
+                })
+                .catch(error => {
+                    alert(error.message);  // 显示错误消息
+                });
+        });
+        function displayFile(url) {
+            upfile.push(url);
+            var div = "<div class=\"input-file-display-show\" style=\"background-image:url('" + url + "')\"><div class=\"input-file-display-close-btn\" onclick=\"removeDiv(this," + url + ")\">×</div></div>";
+            document.querySelector(".input-file-display").innerHTML += div;
+        }
+        function removeDiv(button,url) {
+            var parentDiv = button.parentNode;
+            parentDiv.remove();
+            const index = upfile.indexOf(url);
+            if (index > -1) {
+                // 如果找到，从数组中移除该元素
+                upfile.splice(index, 1);
+            }
+        }
+        window.removeDiv = removeDiv;
     </script>
 </body>
 </html>
