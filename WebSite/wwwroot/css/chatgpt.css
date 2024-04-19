@@ -152,11 +152,8 @@ body {
         position: relative;
     }
 .input-file-display-show-big {
-    height: 250px;
-    width: 300px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+    min-height:300px;
+    width:600px;
 }
         .input-file-display-close-btn {
             position: absolute;

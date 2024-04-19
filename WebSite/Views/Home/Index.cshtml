@@ -352,9 +352,9 @@
         window.SendMessage = SendMessage;
         function adduser(str,file) {
             if (file && file.length > 0) {
-                str += "<div class=\"input-file-display-show-big\" style=\"background-image:url('" + file[0] + "')\"></div>";
+                str = "<img width=\"70%;\" src=\"" + file[0] + "\" />" + "<p>" + str + "</p>";
             }
-            var newdiv = "<div class=\"userchat\"><div class=\"avatar\"><div class=\"circleuser\"></div></div><div class=\"othermsg\"><div class=\"name\">你</div><div class=\"message\"><p>" + str + "</p></div></div></div>";
+            var newdiv = "<div class=\"userchat\"><div class=\"avatar\"><div class=\"circleuser\"></div></div><div class=\"othermsg\"><div class=\"name\">你</div><div class=\"message\">" + str + "</div></div></div>";
             var content = document.getElementsByClassName("chatcontent")[0];
             content.innerHTML += newdiv;
             content.scrollTop = content.scrollHeight;
