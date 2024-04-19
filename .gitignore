@@ -6,3 +6,4 @@
 /WebSite/obj
 /WebSite/bin/Debug/net8.0
 *.gguf
+/WebSite/wwwroot/tmp
