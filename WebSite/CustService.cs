@@ -15,10 +15,19 @@ namespace WebSite
         static string mmpmodelPath = "C:\\Users\\Administrator\\source\\repos\\LocalChatForLlama\\mmproj-mistral7b-f16-q6_k.gguf"; //定位到你的".gguf"CLIP模型所在位置;
         //对话模型：mistral-7b-evol-instruct-chinese.Q4_K_M.gguf 下载地址：https://huggingface.co/s3nh/Mistral-7B-Evol-Instruct-Chinese-GGUF/blob/main/mistral-7b-evol-instruct-chinese.Q4_K_M.gguf
         //多模态模型：llava-v1.6-mistral-7b.Q4_K_M.gguf 下载地址：https://huggingface.co/mradermacher/llava-v1.6-mistral-7b-GGUF/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf
-        //CLIP模型：mmproj-mistral7b-f16-q6_k.gguf 下载地址：https://huggingface.co/cmp-nct/llava-1.6-gguf/resolve/main/mmproj-mistral7b-f16-q6_k.gguf?download=true
+        //CLIP模型：mmproj-mistral7b-f16-q6_k.gguf 下载地址：https://huggingface.co/cmp-nct/llava-1.6-gguf/resolve/main/mmproj-mistral7b-f16-q6_k.gguf
         static ConcurrentDictionary<string, (ChatSession, SemaphoreSlim)> sessionDic = new ConcurrentDictionary<string, (ChatSession, SemaphoreSlim)>();
+        static LLamaWeights weights;
+        static LLavaWeights clipWeights;
+        static ModelParams modelParams;
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            modelParams = new ModelParams(modelPath)
+            {
+                ContextSize = 4096
+            };
+            weights = LLamaWeights.LoadFromFile(modelParams);
+            clipWeights = LLavaWeights.LoadFromFile(mmpmodelPath);
             await Task.CompletedTask;
         }
         static (ChatSession session,SemaphoreSlim semaphore) GetSessionById(string id)
@@ -29,7 +38,7 @@ namespace WebSite
             };
             if (!sessionDic.ContainsKey(id))
             {
-                sessionDic.TryAdd(id, (new ChatSession(new InteractiveExecutor(LLamaWeights.LoadFromFile(param).CreateContext(param), LLavaWeights.LoadFromFile(mmpmodelPath))),new SemaphoreSlim(1)));
+                sessionDic.TryAdd(id, (new ChatSession(new InteractiveExecutor(weights.CreateContext(modelParams), clipWeights)),new SemaphoreSlim(1)));
             }
             return sessionDic[id];
         }
