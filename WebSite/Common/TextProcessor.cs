@@ -4,7 +4,7 @@ namespace WebSite.Common
 {
     public class TextProcessor
     {
-        public static string wsend = "wsend";
+        public static string wsend = "<|end_of_text|>";
         public static bool CheckEnd(StringBuilder sb)
         {
             var content = sb.ToString();

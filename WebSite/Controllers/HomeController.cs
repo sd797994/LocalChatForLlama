@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using WebSite.Common;
-using WebSite.Models;
 
 namespace WebSite.Controllers
 {
@@ -69,10 +66,10 @@ namespace WebSite.Controllers
             {
                 return BadRequest("No file uploaded.");
             }
-            var allowedTypes = new[] { "image/jpeg", "image/png", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
+            var allowedTypes = new[] { "image/jpeg", "image/png", "application/pdf"};
             if (!Array.Exists(allowedTypes, type => type == file.ContentType))
             {
-                return BadRequest("只接受 JPEG, PNG, PDF, DOCX文件");
+                return BadRequest("只接受 JPEG, PNG, PDF文件");
             }
             var fileExtension = Path.GetExtension(file.FileName);
             var newFileName = $"{Guid.NewGuid()}{fileExtension}";

@@ -234,7 +234,7 @@
         function wscallback (event) {
             relpy += event.data;
             if (firstcheck == 1) {
-                if (event.data.includes("wsend")) {
+                if (event.data.includes("<|end_of_text|>")) {
                     appendchat("抱歉,AI没有产生有效的响应，请重试");
                     firstcheck = 0;
                     var currs = document.getElementsByClassName("chatcurrent");
@@ -254,13 +254,13 @@
                 }
             }
             else if (firstcheck == 2) {
-                if (event.data.includes("wsend")) {
+                if (event.data.includes("<|end_of_text|>")) {
                     var old = localStorage.getItem("chathistory");
                     if (old != null) {
                         old = JSON.parse(old);
                     }
                     var filteredObjects = old.filter(obj => obj.id === trygetsession())[0];
-                    filteredObjects.record.push({ Type: 1, Comment: relpy.replace("wsend", "") });
+                    filteredObjects.record.push({ Type: 1, Comment: relpy.replace("<|end_of_text|>", "") });
                     localStorage.setItem("chathistory", JSON.stringify(old));
                     firstcheck = 0;
                     var currs = document.getElementsByClassName("chatcurrent");
@@ -352,7 +352,14 @@
         window.SendMessage = SendMessage;
         function adduser(str,file) {
             if (file && file.length > 0) {
-                str = "<img width=\"70%;\" src=\"" + file[0] + "\" />" + "<p>" + str + "</p>";
+                var ico = file[0];
+                if (ico.split('.')[1] == "pdf") {
+                    ico = "pdfdef.jpg";
+                    str = "<img width=\"80px;\" src=\"" + ico + "\" />" + "<p>" + str + "</p>";
+                }
+                else {
+                    str = "<img width=\"70%;\" src=\"" + file[0] + "\" />" + "<p>" + str + "</p>";
+                }
             }
             var newdiv = "<div class=\"userchat\"><div class=\"avatar\"><div class=\"circleuser\"></div></div><div class=\"othermsg\"><div class=\"name\">你</div><div class=\"message\">" + str + "</div></div></div>";
             var content = document.getElementsByClassName("chatcontent")[0];
@@ -597,8 +604,13 @@
                 });
         });
         function displayFile(url) {
+            debugger;
             upfile.push(url);
-            var div = "<div class=\"input-file-display-show\" style=\"background-image:url('" + url + "')\"><div class=\"input-file-display-close-btn\" onclick=\"removeDiv(this," + url + ")\">×</div></div>";
+            var ico = url;
+            if (ico.split('.')[1] == "pdf") { 
+                ico = "pdfdef.jpg";
+            }
+            var div = "<div class=\"input-file-display-show\" style=\"background-image:url('" + ico + "')\"><div class=\"input-file-display-close-btn\" onclick=\"removeDiv(this," + url + ")\">×</div></div>";
             document.querySelector(".input-file-display").innerHTML += div;
         }
         function removeDiv(button,url) {
